@@ -1,3 +1,6 @@
+import decorator_input_validation as div
+
+
 def type_check_args(arg_types: list):
     """
     Check the types of the arguments passed to the
@@ -8,12 +11,16 @@ def type_check_args(arg_types: list):
     than the number of arguments passed, only the first
     n arguments will be checked, where n is the number of types passed.
     """
+    if not div.is_type_list(arg_types):
+        raise ValueError(
+            f"arg_types must contain only types, but contains: {arg_types}."
+        )
 
     def decorate(function_to_check):
         def wrapper(*args):
             if len(arg_types) == 0:
                 raise ValueError(
-                    f"Redundant use of 'type_check_strict'. Zero types provided to check the arguments to '{function_to_check.__name__}'."
+                    f"Redundant use of 'type_check_args'. Zero types provided to check the arguments to '{function_to_check.__name__}'."
                 )
             if len(arg_types) > len(args):
                 raise ValueError(
@@ -48,11 +55,16 @@ def type_check_args_strict(arg_types: list):
     isInstance().
     """
 
+    if not div.is_type_list(arg_types):
+        raise ValueError(
+            f"arg_types must contain only types, but contains: {arg_types}."
+        )
+
     def decorate(function_to_check):
         def wrapper(*args):
             if len(arg_types) == 0:
                 raise ValueError(
-                    f"Redundant use of 'type_check_strict'. Zero types provided to check the arguments to '{function_to_check.__name__}'."
+                    f"Redundant use of 'type_check_args_strict'. Zero types provided to check the arguments to '{function_to_check.__name__}'."
                 )
             if len(arg_types) > len(args):
                 raise ValueError(
