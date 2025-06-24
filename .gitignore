@@ -1,0 +1,5 @@
+.venv
+uv.lock
+main.sh
+__pycache__
+py.typed
