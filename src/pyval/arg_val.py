@@ -36,8 +36,6 @@ def arg_val_args(arg_validation_funcs: list[list[Callable]]):
             raise ValueError(
                 f" The number of lists of validation functions: '{len(arg_validation_funcs)}', must not exceed the number of parameters to '{func.__name__}': '{len(param_names)}'."
             )
-        print(sig)
-        print(param_names)
 
         @wraps(func)
         def wrapper(*args):
