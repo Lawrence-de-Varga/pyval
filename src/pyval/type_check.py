@@ -1,4 +1,4 @@
-import decorator_input_validation as div
+from . import decorator_input_validation as div
 
 
 def type_check_args(arg_types: list):

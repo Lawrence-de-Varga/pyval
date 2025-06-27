@@ -2,7 +2,7 @@ import inspect
 from functools import wraps
 from pathlib import Path
 from collections.abc import Callable
-import decorator_input_validation as div
+from . import decorator_input_validation as div
 
 
 def arg_val_args(arg_validation_funcs: list[list[Callable]]):
