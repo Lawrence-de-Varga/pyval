@@ -8,7 +8,7 @@ from pyval.type_check import type_check_args, type_check_args_strict
 
 
 class TestTypeCheck(unittest.TestCase):
-    def test_type_check_no_arg_types(self):
+    def test_type_check_args_no_arg_types(self):
         with self.assertRaises(ValueError):
 
             @type_check_args([])
@@ -31,9 +31,25 @@ class TestTypeCheck(unittest.TestCase):
 
             mul(7, 8)
 
-    def test_type_check_ars_not_list(self):
+    def test_type_check_args_not_list(self):
         with self.assertRaises(TypeError):
 
             @type_check_args(str, list)
             def mul(x, y):
                 return x * y
+
+    def test_type_check_args_wrong_types(self):
+        with self.assertRaises(TypeError):
+
+            @type_check_args([str, list])
+            def mul(x, y):
+                return x * y
+
+            mul(8, 9)
+
+    def test_type_check_args_fewer_types(self):
+        @type_check_args([int])
+        def mul(x, y, z):
+            return x * y * z
+
+        self.assertEqual(mul(3, 4, 5), 60)
