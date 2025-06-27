@@ -17,11 +17,13 @@ def type_check_args(arg_types: list):
         )
 
     def decorate(func):
+        if len(arg_types) == 0:
+            raise ValueError(
+                f"Redundant use of 'type_check_args'. Zero types provided to check the arguments to '{func.__name__}'."
+            )
+
         def wrapper(*args):
-            if len(arg_types) == 0:
-                raise ValueError(
-                    f"Redundant use of 'type_check_args'. Zero types provided to check the arguments to '{func.__name__}'."
-                )
+            print("executing wrapper")
             if len(arg_types) > len(args):
                 raise ValueError(
                     f"The number of types to check: {len(arg_types)}, must not exceed the number of parrameters to {func.__name__}: {len(args)}."
@@ -29,11 +31,12 @@ def type_check_args(arg_types: list):
 
             idx = 0
             for arg_type in arg_types:
-                if not isinstance(args[idx], arg_types[idx]):  # noqa: E721
+                if not isinstance(args[idx], arg_types[idx]):
                     raise TypeError(
                         f"Arg {idx} : '{args[idx]}' to '{func.__name__}' must be of type: '{arg_types[idx]}' but is of type: '{type(args[idx])}'"
                     )
                 idx += 1
+
             return func(*args)
 
         return wrapper
@@ -61,11 +64,12 @@ def type_check_args_strict(arg_types: list):
         )
 
     def decorate(func):
+        if len(arg_types) == 0:
+            raise ValueError(
+                f"Redundant use of 'type_check_args_strict'. Zero types provided to check the arguments to '{func.__name__}'."
+            )
+
         def wrapper(*args):
-            if len(arg_types) == 0:
-                raise ValueError(
-                    f"Redundant use of 'type_check_args_strict'. Zero types provided to check the arguments to '{func.__name__}'."
-                )
             if len(arg_types) > len(args):
                 raise ValueError(
                     f"The number of types to check: {len(arg_types)}, must not exceed the number of parrameters to {func.__name__}: {len(args)}."

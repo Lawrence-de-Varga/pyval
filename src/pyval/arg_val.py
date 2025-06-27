@@ -1,6 +1,4 @@
 import inspect
-from functools import wraps
-from pathlib import Path
 from collections.abc import Callable
 from . import decorator_input_validation as div
 
@@ -37,7 +35,6 @@ def arg_val_args(arg_validation_funcs: list[list[Callable]]):
                 f" The number of lists of validation functions: '{len(arg_validation_funcs)}', must not exceed the number of parameters to '{func.__name__}': '{len(param_names)}'."
             )
 
-        @wraps(func)
         def wrapper(*args):
             idx = 0
             for arg in args:

@@ -53,3 +53,17 @@ class TestTypeCheck(unittest.TestCase):
             return x * y * z
 
         self.assertEqual(mul(3, 4, 5), 60)
+
+
+class TestTypeCheckStrict(unittest.TestCase):
+    def test_type_check_args_strict_isinstance(self):
+        with self.assertRaises(TypeError):
+
+            @type_check_args_strict([int])
+            def obv(boolean):
+                if boolean:
+                    return True
+                else:
+                    return False
+
+            obv(True)
