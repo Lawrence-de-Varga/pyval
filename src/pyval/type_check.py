@@ -1,4 +1,22 @@
+import inspect
+from typing import get_type_hints
 from . import decorator_input_validation as div
+
+
+def type_check(func):
+    type_hints = get_type_hints(func)
+
+    if len(type_hints) == 0:
+        raise ValueError(
+            f"Redundant use of 'type_check'. Zero type hints provided to check the arguments to '{func.__name__}'"
+        )
+    def wrapper(*args, **kwargs):
+        sig = inspect.signature(func)
+        param_names = list(sig.parameters.keys())
+        for idx, arg in enumerate(args):
+            
+            
+        
 
 
 def type_check_args(arg_types: list):
