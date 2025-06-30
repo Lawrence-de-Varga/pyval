@@ -1,22 +1,70 @@
 import inspect
-from typing import get_type_hints
+from typing import get_type_hints, Callable
 from . import decorator_input_validation as div
 
 
 def type_check(func):
+    """
+    Checks the types passed to and returned from the decorated function against any type hints
+    supplied(If there are none it throws an error).
+    NOTE: Uses isinstance to compare types so bool will be an int etc. use type_check_strict
+    if stricter checks are required.
+    NOTE: coes not check the type of default values of parameters, so if they are wrong the problem will not be caught.
+    """
+    if not isinstance(func, Callable):
+        raise TypeError(
+            f"'{func}' must be an instance of 'Callable' but is of type: '{type(func)}'."
+        )
+
     type_hints = get_type_hints(func)
 
     if len(type_hints) == 0:
         raise ValueError(
             f"Redundant use of 'type_check'. Zero type hints provided to check the arguments to '{func.__name__}'"
         )
+
+    if not div.items_are_types(type_hints):
+        raise TypeError(
+            f"type hints contain undefined types or non-type objects: {type_hints}."
+        )
+
     def wrapper(*args, **kwargs):
         sig = inspect.signature(func)
         param_names = list(sig.parameters.keys())
+
         for idx, arg in enumerate(args):
-            
-            
-        
+            arg_type = type(arg)
+            param_type = type_hints.get(param_names[idx], None)
+            if param_type is None:
+                continue
+            if not isinstance(arg, param_type):
+                raise TypeError(
+                    f"'{param_names[idx]}' should be of type: '{param_type}', but is of type: '{arg_type}'."
+                )
+
+        for key, val in kwargs.items():
+            arg_type = type(val)
+            param_type = type_hints.get(key, None)
+            if param_type is None:
+                continue
+            if not isinstance(val, param_type):
+                raise TypeError(
+                    f"'{key}' should be of type: '{param_type}', but is of type: '{arg_type}'."
+                )
+
+        try:
+            result = func(*args, **kwargs)
+        except Exception as e:
+            raise Exception(f"Error: '{func.__name__}' has failed with error: '{e}'.")
+
+        if "return" in type_hints:
+            if not isinstance(result, type_hints["return"]):
+                raise TypeError(
+                    f"'{func.__name__}' has a return type of: '{type_hints['return']}' but returned a value of type: '{type(result)}'."
+                )
+        return result
+
+    return wrapper
 
 
 def type_check_args(arg_types: list):
