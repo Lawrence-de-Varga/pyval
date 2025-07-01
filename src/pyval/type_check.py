@@ -23,7 +23,7 @@ def type_check(func):
             f"Redundant use of 'type_check'. Zero type hints provided to check the arguments to '{func.__name__}'"
         )
 
-    if not div.items_are_types(type_hints):
+    if not div.values_are_types(type_hints):
         raise TypeError(
             f"type hints contain undefined types or non-type objects: {type_hints}."
         )
